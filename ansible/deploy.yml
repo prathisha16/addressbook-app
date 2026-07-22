@@ -1,1 +1,31 @@
+---
+- name: Deploy WAR to Tomcat
+  hosts: webservers
+  become: yes
 
+  vars:
+    war_file: /var/lib/jenkins/workspace/DeployJavaProject/target/addressbook.war
+    tomcat_webapps: /var/lib/tomcat10/webapps
+
+  tasks:
+
+    - name: Stop Tomcat
+      service:
+        name: tomcat10
+        state: stopped
+
+    - name: Remove old application
+      file:
+        path: "{{ tomcat_webapps }}/addressbook.war"
+        state: absent
+
+    - name: Copy WAR file
+      copy:
+        src: "{{ war_file }}"
+        dest: "{{ tomcat_webapps }}/addressbook.war"
+        mode: '0644'
+
+    - name: Start Tomcat
+      service:
+        name: tomcat10
+        state: started
