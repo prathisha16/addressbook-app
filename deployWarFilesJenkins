@@ -21,14 +21,12 @@ pipeline {
             }
         }
 
-        stage('Deploy using Ansible') {
-            steps {
-                sh '''
-                cd /var/lib/jenkins/ansible
-                ansible-playbook -i inventory deploy.yml
-                '''
-            }
-        }
+stage('Deploy') {
+    steps {
+        sh 'ansible-playbook -i inventory deploy.yml'
+    }
+}
+        
 
         stage('Verify Deployment') {
             steps {
